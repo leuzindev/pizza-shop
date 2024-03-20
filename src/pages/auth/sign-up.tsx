@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -8,6 +8,11 @@ import { z } from 'zod'
 import { registerRestaurant } from '@/api/register-restaurant'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp'
 import { Label } from '@/components/ui/label'
 
 const signUpForm = z.object({
@@ -25,6 +30,7 @@ export function SignUp() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { isSubmitting },
   } = useForm<SignUpForm>()
 
@@ -33,6 +39,7 @@ export function SignUp() {
   })
 
   async function handleSignUp(data: SignUpForm) {
+    console.log(data)
     try {
       await registerRestaurantFn({
         restaurantName: data.restaurantName,
@@ -59,7 +66,7 @@ export function SignUp() {
         <Button asChild className="absolute right-8 top-8" variant="ghost">
           <Link to="/sign-in">Fazer login</Link>
         </Button>
-        <div className="flex w-[350px] flex-col justify-center gap-6">
+        <div className="flex w-[360px] flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
             <h1 className="text-2xl font-semibold -tracking-tight">
               Criar conta grátis
@@ -91,7 +98,29 @@ export function SignUp() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Seu celular</Label>
-              <Input id="phone" type="tel" {...register('phone')} />
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <InputOTP maxLength={11} {...field}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                      <InputOTPSlot index={6} />
+                      <InputOTPSlot index={7} />
+                      <InputOTPSlot index={8} />
+                      <InputOTPSlot index={9} />
+                      <InputOTPSlot index={10} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                )}
+              ></Controller>
+              {/* <Input id="phone" type="tel" {...register('phone')} /> */}
             </div>
             <Button className="w-full" type="submit" disabled={isSubmitting}>
               Criar cadastro
